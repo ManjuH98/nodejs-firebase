@@ -18,6 +18,9 @@ const sendNotification = async (data) => {
       title: data["Title"],
       body: data["Body"],
       image: data["Image"] || null
+    },
+    data:{
+      link:data["Link"] || ""
     }
   };
 
