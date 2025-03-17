@@ -33,7 +33,8 @@ const sendNotification = async (data) => {
     token: data["Device Id"],
     notification: {
       title: data["Title"],
-      body: data["Body"]
+      body: data["Body"],
+      image: data["Image"]
     }
   };
 
@@ -41,11 +42,27 @@ const sendNotification = async (data) => {
     const response = await admin.messaging().send(message);
     console.log("Successfully sent message:", response);
   } catch (error) {
-    console.error("Error sending message:", error);
+    console.error("Error sending message:", error.errorInfo);
+  }
+};
+
+const scheduleNotification = (notification) => {
+  const scheduledTime = new Date(notification["Scheduled Time"]);
+  const delay = scheduledTime - new Date();
+
+  if (delay > 0) {
+    setTimeout(() => sendNotification(notification), delay);
+    console.log("Sending message");
+  } else {
+    console.error("Scheduled time is in the past.");
   }
 };
 
 // Send notifications for each entry
+// notificationData.forEach((notification) => {
+//   sendNotification(notification);
+// });
+
 notificationData.forEach((notification) => {
-  sendNotification(notification);
+  scheduleNotification(notification);
 });
